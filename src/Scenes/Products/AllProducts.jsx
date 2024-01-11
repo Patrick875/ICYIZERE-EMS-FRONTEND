@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import useFetchData from "../../Hooks/UseFetchData";
 import Barcode from "react-barcode";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useForm } from "react-hook-form";
 import { HiMagnifyingGlass } from "react-icons/hi2";
+import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
 import html2canvas from "html2canvas";
 import { FadeLoader } from "react-spinners";
+import instance from "../../API";
 
-const Item = ({ el }) => {
+const Item = ({ el, setData }) => {
 	const [barcodeDataURL, setBarcodeDataURL] = useState(null);
 	const barcodeRef = useRef(null);
 
@@ -29,6 +31,16 @@ const Item = ({ el }) => {
 					console.error("Error generating barcode PNG:", error);
 				});
 		}
+	};
+	const deleteProduct = async (id) => {
+		await instance
+			.post("/products/prodId", { prodId: id })
+			.then(() => {
+				setData((prev) => prev.filter((item) => item.id !== id));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	return (
@@ -67,6 +79,20 @@ const Item = ({ el }) => {
 					)}
 				</div>
 			</div>
+			<div className="flex flex-col gap-4 p-2 flex-2">
+				<Link
+					to={`edit/${el.id}`}
+					className="flex items-center justify-between px-4 py-2 text-xs text-white rounded-sm bg-sky-800 ">
+					Edit
+					<MdOutlineModeEdit className="w-4 h-4" />
+				</Link>
+				<button
+					onClick={() => deleteProduct(el.id)}
+					className="flex items-center justify-between px-4 py-2 text-xs text-white rounded-sm bg-slate-800 ">
+					Delete
+					<MdDeleteOutline className="w-4 h-4" />
+				</button>
+			</div>
 		</div>
 	);
 };
@@ -74,7 +100,7 @@ const Item = ({ el }) => {
 const AllProducts = () => {
 	const { register, watch } = useForm();
 	const query = watch("query");
-	const { data, loading } = useFetchData("/products");
+	const { data, loading, setData } = useFetchData("/products");
 	const [pageNumber, setPageNumber] = useState(0);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
 	const pagesVisited = pageNumber * itemsPerPage;
@@ -82,7 +108,7 @@ const AllProducts = () => {
 		data &&
 		query === "" &&
 		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
-			return <Item el={el} key={el.id} />;
+			return <Item el={el} key={el.id} setData={setData} />;
 		});
 
 	const searchResults = useMemo(() => {
@@ -90,7 +116,7 @@ const AllProducts = () => {
 			return data
 				.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
 				.slice(pagesVisited, pagesVisited + itemsPerPage)
-				.map((el) => <Item key={el.id} el={el} />);
+				.map((el) => <Item key={el.id} el={el} setData={setData} />);
 		} else {
 			return [];
 		}

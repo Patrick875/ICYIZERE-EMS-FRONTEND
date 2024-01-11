@@ -17,7 +17,11 @@ const CreateCategory = () => {
 	const [success, setSuccess] = useState(null);
 	const [error, setError] = useState(null);
 	const [message, setMessage] = useState(null);
-
+	const handleOnFocus = () => {
+		setError(null);
+		setMessage(null);
+		setSuccess(null);
+	};
 	const generateBarcodeDataURL = async () => {
 		if (componentRef.current) {
 			try {
@@ -51,10 +55,11 @@ const CreateCategory = () => {
 				description,
 			})
 			.then(() => {
-				console.log("Submission successful");
+				setSuccess(true);
 			})
 			.catch((err) => {
-				console.error("Error submitting data:", err);
+				setError(true);
+				setMessage(err.response.data.message);
 			})
 			.finally(() => {
 				setLoading(false);
@@ -77,6 +82,7 @@ const CreateCategory = () => {
 							type="text"
 							className="w-full px-3 py-1 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 							id="text"
+							onFocus={handleOnFocus}
 							{...register("name")}
 						/>
 					</div>
@@ -91,6 +97,7 @@ const CreateCategory = () => {
 							rows={4}
 							className="w-full px-3 py-1 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 							id="Description"
+							onFocus={handleOnFocus}
 							{...register("description")}
 						/>
 					</div>

@@ -8,8 +8,10 @@ import { useForm } from "react-hook-form";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import html2canvas from "html2canvas";
 import { FadeLoader } from "react-spinners";
+import instance from "../../API";
+import { MdOutlineModeEdit, MdDeleteOutline } from "react-icons/md";
 
-const Item = ({ el }) => {
+const Item = ({ el, setData }) => {
 	const [barcodeDataURL, setBarcodeDataURL] = useState(null);
 	const barcodeRef = useRef(null);
 
@@ -31,7 +33,16 @@ const Item = ({ el }) => {
 				});
 		}
 	};
-
+	const deleteCategory = async (id) => {
+		await instance
+			.post("/products/prodId", { prodId: id })
+			.then(() => {
+				setData((prev) => prev.filter((item) => item.id !== id));
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 	return (
 		<div
 			key={el.id}
@@ -65,12 +76,26 @@ const Item = ({ el }) => {
 				<p className="font-medium">Description</p>
 				<p>{el.description ? el.description : null}</p>
 			</div>
+			<div className="flex flex-col gap-4 p-2 flex-2">
+				<Link
+					to={`edit/${el.id}`}
+					className="flex items-center justify-between px-4 py-2 text-xs text-white rounded-sm bg-sky-800 ">
+					Edit
+					<MdOutlineModeEdit className="w-4 h-4" />
+				</Link>
+				<button
+					onClick={() => deleteCategory(el.id)}
+					className="flex items-center justify-between px-4 py-2 text-xs text-white rounded-sm bg-slate-800 ">
+					Delete
+					<MdDeleteOutline className="w-4 h-4" />
+				</button>
+			</div>
 		</div>
 	);
 };
 
 function Dashboard() {
-	const { data, loading } = useFetchData("/categories");
+	const { data, loading, setData } = useFetchData("/categories");
 	const { register, watch } = useForm();
 	const query = watch("query");
 	const [pageNumber, setPageNumber] = useState(0);
@@ -80,7 +105,7 @@ function Dashboard() {
 		data &&
 		query === "" &&
 		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
-			return <Item el={el} key={el.id} />;
+			return <Item el={el} key={el.id} setData={setData} />;
 		});
 
 	const searchResults = useMemo(() => {
@@ -88,7 +113,7 @@ function Dashboard() {
 			return data
 				.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
 				.slice(pagesVisited, pagesVisited + itemsPerPage)
-				.map((el) => <Item key={el.id} el={el} />);
+				.map((el) => <Item key={el.id} el={el} setData={setData} />);
 		} else {
 			return [];
 		}

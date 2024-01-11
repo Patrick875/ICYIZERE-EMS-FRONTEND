@@ -27,6 +27,11 @@ const CreateProduct = () => {
 				reset();
 			});
 	};
+	const handleOnFocus = () => {
+		setError(null);
+		setMessage(null);
+		setSuccess(null);
+	};
 	return (
 		<div className="w-full ">
 			<div className="p-4 mx-auto">
@@ -43,6 +48,7 @@ const CreateProduct = () => {
 						<input
 							type="text"
 							required
+							onFocus={handleOnFocus}
 							className="w-full px-3 py-1 text-xs border border-gray-500 rounded-sm shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 							id="text"
 							{...register("name")}
@@ -57,6 +63,7 @@ const CreateProduct = () => {
 						<select
 							className="w-full py-1 text-xs border border-gray-500 rounded-sm"
 							defaultValue={""}
+							onFocus={handleOnFocus}
 							{...register("category")}>
 							<option value="">Select category</option>
 							{data &&

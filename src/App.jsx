@@ -11,6 +11,8 @@ import CreateProduct from "./Scenes/Products/CreateProduct";
 import AllProducts from "./Scenes/Products/AllProducts";
 import RegisterUser from "./Scenes/RegisterUser";
 import Page404 from "./Shared/Page404";
+import EditProduct from "./Scenes/Products/EditProduct";
+import EditCategory from "./Scenes/Dashboard/EditCategory";
 
 function App() {
 	return (
@@ -24,8 +26,10 @@ function App() {
 					<Route path="products" element={<Products />}>
 						<Route index element={<AllProducts />} />
 						<Route path="create" element={<CreateProduct />} />
+						<Route path="edit/:id" element={<EditProduct />} />
 					</Route>
 					<Route path="create" element={<CreateCategory />} />
+					<Route path="edit/:id" element={<EditCategory />} />
 				</Route>
 				<Route path="*" element={<Page404 />} />
 			</Routes>
