@@ -3,17 +3,21 @@ import { useForm } from "react-hook-form";
 import instance from "../../API";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import { HashLoader } from "react-spinners";
 
 const RegisterUser = () => {
 	const { register, handleSubmit, reset } = useForm();
 	const [error, setError] = useState(false);
 	const [message, setMessage] = useState(null);
 	const [success, setSuccess] = useState(null);
+	const [loading, setLoading] = useState(null);
 	const handleOnFocus = () => {
 		setError(null);
 		setSuccess(null);
+		setMessage(null);
 	};
 	const signup = async (data) => {
+		setLoading(true);
 		await instance
 			.post("/register", { ...data })
 			.then((res) => {
@@ -25,6 +29,7 @@ const RegisterUser = () => {
 				setMessage(err.response.data.message);
 			})
 			.finally(() => {
+				setLoading(false);
 				reset();
 			});
 	};
@@ -125,7 +130,11 @@ const RegisterUser = () => {
 						<button
 							type="submit"
 							className="w-full px-3 py-2 text-xs font-bold text-center text-white rounded-[4px] shadow-lg bg-gradient-to-t from-teal-800 to-teal-900 decoration-none my-7">
-							Register
+							{!loading ? (
+								"Register"
+							) : (
+								<HashLoader color="#fff" loading={loading} size={15} />
+							)}
 						</button>
 						<Link to="/" className="block text-xs text-center text-sky-700 ">
 							Login

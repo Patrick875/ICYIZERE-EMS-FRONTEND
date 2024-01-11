@@ -3,16 +3,20 @@ import { useForm } from "react-hook-form";
 import instance from "../../API";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import { HashLoader } from "react-spinners";
 
 function ResetPassword() {
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState(false);
 	const [message, setMessage] = useState(null);
+	const [loading, setLoading] = useState(null);
+
 	const navigateBack = () => {
 		navigate("/");
 	};
 	const navigate = useNavigate();
 	const resetPassword = async (data) => {
+		setLoading(true);
 		await instance
 			.post("/resetPassword", { ...data })
 			.then((res) => {
@@ -22,10 +26,14 @@ function ResetPassword() {
 				console.log(err);
 			})
 			.finally(() => {
+				setLoading(false);
 				navigateBack();
 			});
 	};
-
+	const handleOnFocus = () => {
+		setError(null);
+		setMessage(null);
+	};
 	return (
 		<div className="max-h-screen mx-auto ">
 			<div className="flex flex-col items-center justify-center min-h-screen bg-blue-50">
@@ -55,6 +63,7 @@ function ResetPassword() {
 								Email
 							</label>
 							<input
+								onFocus={handleOnFocus}
 								type="email"
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 								id="email"
@@ -65,7 +74,11 @@ function ResetPassword() {
 						<button
 							type="submit"
 							className="w-full px-3 py-2 text-xs font-bold text-center text-white rounded-[4px] shadow-lg bg-gradient-to-t from-teal-800 to-teal-900 decoration-none my-7">
-							Reset Password
+							{!loading ? (
+								"Reset Password"
+							) : (
+								<HashLoader color="#fff" loading={loading} size={15} />
+							)}
 						</button>
 						<Link to="/" className="block text-xs text-center text-sky-700 ">
 							Login

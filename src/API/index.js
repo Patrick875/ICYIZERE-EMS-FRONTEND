@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookie from "js-cookie";
-const instance = axios.create({ baseURL: "http://localhost:5000/api/v1" });
+import { serverUrl } from "../constants";
+const instance = axios.create({ baseURL: serverUrl });
 
 instance.interceptors.response.use(
 	function (response) {

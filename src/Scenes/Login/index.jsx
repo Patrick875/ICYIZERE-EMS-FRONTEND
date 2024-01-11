@@ -5,17 +5,24 @@ import instance from "../../API";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../Context/UserContext";
 import Logo from "../../assets/logo.png";
+import { HashLoader } from "react-spinners";
 
 const Login = () => {
 	const { register, handleSubmit } = useForm();
 	const [error, setError] = useState(false);
 	const [message, setMessage] = useState(null);
+	const [loading, setLoading] = useState(null);
 	const navigateToDashboard = (user) => {
 		navigate("/admin");
 	};
 	const { loginUser, user } = useUser();
 	const navigate = useNavigate();
+	const handleOnFocus = () => {
+		setError(null);
+		setMessage(null);
+	};
 	const login = async (data) => {
+		setLoading(true);
 		await instance
 			.post("/login", { ...data })
 			.then((res) => {
@@ -24,8 +31,11 @@ const Login = () => {
 			})
 			.catch((err) => {
 				console.log(err);
-				//setError(true);
-				// setMessage(err.response.data.message);
+				setError(true);
+				setMessage(err.response.data.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	};
 
@@ -54,6 +64,7 @@ const Login = () => {
 							</label>
 							<input
 								type="email"
+								onFocus={handleOnFocus}
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 								id="email"
 								{...register("email")}
@@ -67,15 +78,21 @@ const Login = () => {
 							</label>
 							<input
 								type="password"
+								onFocus={handleOnFocus}
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 								id="password"
 								{...register("password")}
 							/>
 						</div>
+
 						<button
 							type="submit"
 							className="w-full  text-xs  px-3 py-2 font-bold text-center text-white rounded-[4px] shadow-lg bg-gradient-to-t from-teal-800 to-teal-900 decoration-none my-7">
-							Login
+							{!loading ? (
+								"Login"
+							) : (
+								<HashLoader color="#fff" loading={loading} size={15} />
+							)}
 						</button>
 						<Link
 							to="/resetpassword"
