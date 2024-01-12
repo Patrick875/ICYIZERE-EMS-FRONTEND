@@ -14,6 +14,7 @@ instance.interceptors.response.use(
 					id: response.data.user.id,
 					firstName: response.data.user.firstName,
 					lastName: response.data.user.lastName,
+					tel: response.data.user.tel,
 					role: response.data.user.role,
 				}),
 				{ expires: 30 }

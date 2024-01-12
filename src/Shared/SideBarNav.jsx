@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import useMediaQuery from "../Hooks/useMediaQuery";
 import { IoIosClose } from "react-icons/io";
 
 const SideBarNav = ({ isOpen, setIsOpen }) => {
+	const navigate = useNavigate();
 	const isAboveSmallScenes = useMediaQuery("(min-width:768px)");
 	const [showside, setShowSide] = useState(true);
 	const { pathname } = useLocation();
@@ -27,7 +28,7 @@ const SideBarNav = ({ isOpen, setIsOpen }) => {
 					}`}>
 					<div className="flex justify-center flex-1 my-3 text-white ">
 						<div className="flex justify-center w-full my-1 text-black">
-							<div>
+							<div onClick={() => navigate("")} className="cursor-pointer">
 								<img src={Logo} className="block mx-auto w-14 h-14" />
 								<p className="pt-2 pb-0 mb-0 text-xs font-medium uppercase">
 									CYIZERE GROUP COMPANY LTD

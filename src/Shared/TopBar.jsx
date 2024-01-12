@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
 
 const TopBar = ({ setShowSide }) => {
@@ -25,7 +25,7 @@ const TopBar = ({ setShowSide }) => {
 					</svg>
 				</button>
 				<div className="flex gap-4 item-center">
-					<div className="flex items-center">
+					<Link to="user" className="flex items-center">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -43,7 +43,7 @@ const TopBar = ({ setShowSide }) => {
 						<p className="px-2 text-xs font-medium">
 							{user.firstName + "  " + user.lastName}
 						</p>
-					</div>
+					</Link>
 					<button
 						className="flex items-center px-4 py-1 rounded-md bg-slate-900"
 						onClick={() => {

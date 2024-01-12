@@ -13,6 +13,7 @@ import RegisterUser from "./Scenes/RegisterUser";
 import Page404 from "./Shared/Page404";
 import EditProduct from "./Scenes/Products/EditProduct";
 import EditCategory from "./Scenes/Dashboard/EditCategory";
+import Userdata from "./Scenes/Userdata.jsx";
 
 function App() {
 	return (
@@ -30,6 +31,7 @@ function App() {
 					</Route>
 					<Route path="create" element={<CreateCategory />} />
 					<Route path="edit/:id" element={<EditCategory />} />
+					<Route path="user" element={<Userdata />} />
 				</Route>
 				<Route path="*" element={<Page404 />} />
 			</Routes>
