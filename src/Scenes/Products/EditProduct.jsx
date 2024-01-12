@@ -1,11 +1,14 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import useFetchData from "../../Hooks/UseFetchData";
 import instance from "../../API";
 import { useState } from "react";
 import { HashLoader } from "react-spinners";
 import { useParams } from "react-router-dom";
+import Select from "react-select";
+import AsyncSelect from "react-select/async";
 
 const EditProduct = () => {
+	const { register, handleSubmit, reset, control } = useForm();
 	const { id } = useParams();
 	const handleOnFocus = () => {
 		setSubmitError(null);
@@ -13,17 +16,18 @@ const EditProduct = () => {
 		setSuccess(null);
 	};
 	const { data, error, loading } = useFetchData(`/products/${id}`);
-	const { register, handleSubmit, reset } = useForm();
 	const [success, setSuccess] = useState(null);
 	const [submitError, setSubmitError] = useState(null);
 	const [submitLoading, setSubmitLoading] = useState(null);
 	const [message, setMessage] = useState(null);
 	const { data: categories } = useFetchData("/categories");
 
-	const updateProduct = async (data) => {
+	const updateProduct = async (submit) => {
+		let submitData =
+			submit.name === "" ? { ...submit, name: data.name } : { ...data };
 		setSubmitLoading(true);
 		await instance
-			.post("/products", data)
+			.patch("/products", { ...submitData, prodId: data.id })
 			.then(() => {
 				setSuccess(true);
 			})
@@ -36,9 +40,7 @@ const EditProduct = () => {
 				reset();
 			});
 	};
-
 	console.log("fetched data", data);
-
 	return (
 		<div className="w-full ">
 			<div className="p-4 mx-auto">
@@ -72,20 +74,35 @@ const EditProduct = () => {
 								className="block my-2 text-xs font-medium text-gray-700 ">
 								Category
 							</label>
-							<select
-								className="w-full py-1 text-xs border border-gray-500 rounded-sm"
-								onFocus={handleOnFocus}
-								defaultValue={data && data.ProductCategory.id}
-								{...register("category")}>
-								<option value="">Select category</option>
-								{categories &&
-									categories.length !== 0 &&
-									categories.map((el) => (
-										<option value={el.id} key={el.id}>
-											{el.name}
-										</option>
-									))}
-							</select>
+							{categories && data && (
+								<Controller
+									name="category"
+									control={control}
+									render={({ field }) => {
+										const options = categories.map((cat) => ({
+											value: cat.id,
+											label: cat.name,
+										}));
+										const defaultValue = options.filter(
+											(op) => op.value === data.category
+										)[0];
+										const indexOfSelected = options.indexOf(defaultValue);
+										console.log("def", indexOfSelected);
+										return (
+											<Select
+												className="text-xs"
+												options={options}
+												value={options.find((c) => c.id === field.value)} // Set the selected option based on field value
+												onChange={(selectedOption) =>
+													field.onChange(selectedOption.value)
+												}
+												defaultValue={defaultValue}
+											/>
+										);
+									}}
+									rules={{ required: true }}
+								/>
+							)}
 						</div>
 
 						<button
