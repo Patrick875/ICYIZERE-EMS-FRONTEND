@@ -65,6 +65,7 @@ const RegisterUser = () => {
 								type="text"
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 								id="firstName"
+								required
 								{...register("firstName")}
 							/>
 						</div>
@@ -78,7 +79,7 @@ const RegisterUser = () => {
 								type="text"
 								onFocus={handleOnFocus}
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-								id="email"
+								id="lastName"
 								{...register("lastName")}
 							/>
 						</div>
@@ -109,6 +110,7 @@ const RegisterUser = () => {
 								onFocus={handleOnFocus}
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 								id="email"
+								required
 								{...register("email")}
 							/>
 						</div>
@@ -120,6 +122,7 @@ const RegisterUser = () => {
 							</label>
 							<input
 								type="password"
+								required
 								onFocus={handleOnFocus}
 								className="w-full px-3 py-1 border border-gray-500 rounded shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
 								id="password"

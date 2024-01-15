@@ -35,7 +35,7 @@ const CreateProduct = () => {
 	return (
 		<div className="w-full ">
 			<div className="p-4 mx-auto">
-				<p className="my-2 text-xs text-center">Create category</p>
+				<p className="my-2 text-xs text-center">Create product</p>
 				<form
 					onSubmit={handleSubmit(createProduct)}
 					className="w-full px-8 pt-2 mx-auto bg-white md:w-1/2 p-9">

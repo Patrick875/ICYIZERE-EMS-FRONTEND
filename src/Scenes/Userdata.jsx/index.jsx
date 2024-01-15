@@ -48,7 +48,7 @@ const Userdata = () => {
 	};
 
 	return (
-		<div className="max-h-screen mx-auto ">
+		<div className="w-full ">
 			{success && (
 				<p className="py-3 text-sm text-center text-teal-900 bg-teal-100">
 					{" "}
@@ -60,7 +60,9 @@ const Userdata = () => {
 					{message}
 				</p>
 			)}
-			<form onSubmit={handleSubmit(signup)} className="px-8 pt-2 mx-2 p-9">
+			<form
+				onSubmit={handleSubmit(signup)}
+				className="w-full px-8 pt-2 mx-2 p-9">
 				<p className="my-2 text-xs font-bold text-center uppercase">
 					User details
 				</p>
