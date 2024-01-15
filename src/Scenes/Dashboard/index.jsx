@@ -8,10 +8,10 @@ import { useForm } from "react-hook-form";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import html2canvas from "html2canvas";
 import { FadeLoader } from "react-spinners";
-import instance from "../../API";
 import { MdOutlineModeEdit, MdDeleteOutline } from "react-icons/md";
+import DeleteModel from "../../Shared/Delete";
 
-const Item = ({ el, setData }) => {
+const Item = ({ el, setOpen, setItemId }) => {
 	const [barcodeDataURL, setBarcodeDataURL] = useState(null);
 	const barcodeRef = useRef(null);
 
@@ -33,16 +33,7 @@ const Item = ({ el, setData }) => {
 				});
 		}
 	};
-	const deleteCategory = async (id) => {
-		await instance
-			.post("/products/prodId", { prodId: id })
-			.then(() => {
-				setData((prev) => prev.filter((item) => item.id !== id));
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
+
 	return (
 		<div
 			key={el.id}
@@ -84,7 +75,10 @@ const Item = ({ el, setData }) => {
 					<MdOutlineModeEdit className="w-4 h-4" />
 				</Link>
 				<button
-					onClick={() => deleteCategory(el.id)}
+					onClick={() => {
+						setOpen(true);
+						setItemId(el.id);
+					}}
 					className="flex items-center justify-between px-4 py-2 text-xs text-white rounded-sm bg-slate-800 ">
 					Delete
 					<MdDeleteOutline className="w-4 h-4" />
@@ -97,6 +91,8 @@ const Item = ({ el, setData }) => {
 function Dashboard() {
 	const { data, loading, setData } = useFetchData("/categories");
 	const { register, watch } = useForm();
+	const [open, setOpen] = useState(false);
+	const [itemId, setItemId] = useState();
 	const query = watch("query");
 	const [pageNumber, setPageNumber] = useState(0);
 	const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -105,7 +101,9 @@ function Dashboard() {
 		data &&
 		query === "" &&
 		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
-			return <Item el={el} key={el.id} setData={setData} />;
+			return (
+				<Item el={el} key={el.id} setItemId={setItemId} setOpen={setOpen} />
+			);
 		});
 
 	const searchResults = useMemo(() => {
@@ -113,7 +111,9 @@ function Dashboard() {
 			return data
 				.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
 				.slice(pagesVisited, pagesVisited + itemsPerPage)
-				.map((el) => <Item key={el.id} el={el} setData={setData} />);
+				.map((el) => (
+					<Item key={el.id} el={el} setItemId={setItemId} setOpen={setOpen} />
+				));
 		} else {
 			return [];
 		}
@@ -188,6 +188,14 @@ function Dashboard() {
 					/>
 				)}
 			</div>
+			<DeleteModel
+				item="Category"
+				url="/categories/catId"
+				setData={setData}
+				setOpen={setOpen}
+				open={open}
+				itemId={itemId}
+			/>
 		</div>
 	);
 }

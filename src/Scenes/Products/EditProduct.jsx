@@ -86,18 +86,18 @@ const EditProduct = () => {
 										const defaultValue = options.filter(
 											(op) => op.value === data.category
 										)[0];
-										const indexOfSelected = options.indexOf(defaultValue);
-										console.log("def", indexOfSelected);
+
 										return (
-											<Select
-												className="text-xs"
-												options={options}
-												value={options.find((c) => c.id === field.value)} // Set the selected option based on field value
-												onChange={(selectedOption) =>
-													field.onChange(selectedOption.value)
-												}
-												defaultValue={defaultValue}
-											/>
+											<select
+												className="w-full px-3 py-1 text-xs border border-gray-500 rounded-sm shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+												{...register("category")}
+												defaultValue={defaultValue.value}>
+												{options.map((op) => (
+													<option key={op.value} value={op.value}>
+														{op.label}
+													</option>
+												))}
+											</select>
 										);
 									}}
 									rules={{ required: true }}

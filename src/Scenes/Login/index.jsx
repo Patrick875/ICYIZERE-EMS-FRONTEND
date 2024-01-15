@@ -23,9 +23,11 @@ const Login = () => {
 	};
 	const login = async (data) => {
 		setLoading(true);
+		console.log("data", data);
 		await instance
 			.post("/login", { ...data })
 			.then((res) => {
+				console.log("res", res);
 				loginUser(res.data.user);
 				navigateToDashboard(res.data.user);
 			})
