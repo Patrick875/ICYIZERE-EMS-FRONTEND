@@ -70,7 +70,7 @@ const CreateCategory = () => {
 	return (
 		<div className="w-full">
 			<div className="p-4 mx-auto ">
-				<p className="my-2 text-xs text-center">Create category</p>
+				<p className="my-2 text-xs font-bold text-center">Create category</p>
 				<form className="w-full px-8 pt-2 mx-auto bg-white md:w-1/2 p-9">
 					<div>
 						<label

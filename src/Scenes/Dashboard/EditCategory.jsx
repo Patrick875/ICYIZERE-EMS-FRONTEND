@@ -39,7 +39,7 @@ const EditCategory = () => {
 	return (
 		<div className="w-full">
 			<div className="p-4 mx-auto ">
-				<p className="my-2 text-xs text-center">Update category</p>
+				<p className="my-2 text-xs font-bold text-center">Update category</p>
 				{loading && (
 					<p className="my-4 text-xs text-center">Fetching category .....</p>
 				)}
