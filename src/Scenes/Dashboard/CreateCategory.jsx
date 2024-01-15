@@ -39,13 +39,6 @@ const CreateCategory = () => {
 	const handleBeforePrint = async () => {
 		const barcodeDataURL = await generateBarcodeDataURL();
 
-		if (barcodeDataURL) {
-			// Trigger download immediately
-			const link = document.createElement("a");
-			link.href = barcodeDataURL;
-			link.download = `barcode_${name}.png`;
-			link.click();
-		}
 		// Perform your submission logic here
 		setLoading(true);
 		await instance
@@ -56,6 +49,13 @@ const CreateCategory = () => {
 			})
 			.then(() => {
 				setSuccess(true);
+				if (barcodeDataURL) {
+					// Trigger download immediately
+					const link = document.createElement("a");
+					link.href = barcodeDataURL;
+					link.download = `barcode_${name}.png`;
+					link.click();
+				}
 			})
 			.catch((err) => {
 				setError(true);
