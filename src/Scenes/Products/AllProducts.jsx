@@ -59,7 +59,7 @@ const Item = ({ el, setOpen, setItemId }) => {
 					) : (
 						<div ref={barcodeRef} className="cursor-pointer">
 							<Barcode
-								value={el.ProductCategory && el.ProductCategory.barcode}
+								value={el.ProductCategory && Number(el.ProductCategory.barcode)}
 								className="barcode"
 								format="EAN13"
 								height={40}
